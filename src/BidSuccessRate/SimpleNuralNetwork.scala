@@ -24,13 +24,27 @@ import scala.xml.pull.ProducerConsumerIterator
 
 import scala.math.exp
 
-class SimpleNuralNetwork (data:RDD[Vector]) {
+class SimpleNuralNetwork (data:RDD[Vector],eta:Double,hiddenum:Int,hiddenlen:Int) {
+  
+  
+  val units=new MultiUnit(3,100)
+  
+  class Data{
+    
+  }
+  
+  class Weight{
+    def initialize
+    def update
+
+    
+  }
   
   def initialize(data:RDD[Vector]):Vector = {
-    //Initialize weights to 0.5
+    //Initialize weights to 0.05
     val length=data.take(1)(0).size
     val ar=new Array[Double](length)
-    val weight=new DenseVector(ar.map(_ +0.5))
+    val weight=new DenseVector(ar.map(_ +0.05))
     weight
   }
     
@@ -66,7 +80,6 @@ class SimpleNuralNetwork (data:RDD[Vector]) {
        val t2=sigmoid(unitf(beta,ig2))
        val t3=sigmoid(unitf(gamma,ig3))
        t3*(t1+t2)     
-      
       
     }
     
