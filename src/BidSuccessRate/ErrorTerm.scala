@@ -1,5 +1,0 @@
-package BidSuccessRate
-
-class ErrorTerm {
-  
-}
