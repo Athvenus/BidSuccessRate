@@ -1,22 +1,22 @@
 package FeatureExtract
 
 import org.apache.spark.sql.DataFrame
-import org.apache.spark.sql.functions._
+import org.apache.spark.sql.SQLContext
 
-import org.apache.spark.mllib.linalg.SparseVector
-import org.apache.spark.mllib.linalg.distributed.IndexedRow
-import org.apache.spark.mllib.linalg.distributed.MatrixEntry
-import org.apache.spark.ml.feature.Bucketizer
-import org.apache.spark.ml.feature.CountVectorizer
-import org.apache.spark.ml.feature.CountVectorizerModel
-import org.apache.spark.ml.feature.VectorAssembler
-import org.apache.spark.ml.feature.VectorIndexerModel
-import org.apache.spark.ml.feature.VectorSlicer
-import org.apache.spark.mllib.feature.VectorTransformer
-import org.apache.spark.util.Vector
 
-class bidIrrelevant (data:DataFrame) {
-  
-  
-  
+class BidIrrelevant(data:DataFrame) {
+   
+   val bidIrrelevant=selectBinary(data)
+   
+   def selectBinary(data:DataFrame):DataFrame={
+     val bidIrrelevant = data.select("ex_id","ip","user_agent","user_id","user_id_version","user_category","gender",
+        "detected_language","url","referer","site_category","site_quality","page_type","adslot_type","adsize",
+        "slot_visibility","ask_creative_type","advertiser_id","creative_type","channel_id","request_type",
+        "request_time","client_user_browser","client_user_os","client_user_screen","adspace_id","adspace_website_id",
+        "ad_schedule_id","ad_project_id","adplan_id","page_title","ad_showhours","ad_showhours_weight")
+     
+     bidIrrelevant
+   }
+   
+   
 }

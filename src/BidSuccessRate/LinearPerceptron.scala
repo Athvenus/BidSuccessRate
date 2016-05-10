@@ -5,7 +5,7 @@ import scala.math._
 
 class LinearPerceptron (weight:Array[Double],example:Array[Double],delta:String) {
   
-  def unitf(weight:Array[Double],example:Array[Double]):Double = {
+  def unitf:Double = {
       //DistributedMatrix & ParArray While Needed
       val size=weight.size
       val inner=new Array[Double](size)
@@ -16,8 +16,8 @@ class LinearPerceptron (weight:Array[Double],example:Array[Double],delta:String)
   
   def squash:Double = {
     delta match {
-      case "sigmoid" => sigmoid(unitf(weight,example))
-      case "tanh" => tanh(unitf(weight,example))
+      case "sigmoid" => sigmoid(unitf)
+      case "tanh" => tanh(unitf)
     }
   }
   

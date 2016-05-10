@@ -13,7 +13,6 @@ import org.apache.spark.mllib.linalg.distributed.CoordinateMatrix
 import org.apache.spark.mllib.linalg.distributed.DistributedMatrix
 import org.apache.spark.mllib.linalg.distributed.RowMatrix
 
-
 import scala.collection.parallel.mutable.ParArray
 import scala.collection.parallel.immutable.ParVector
 import scala.collection.{Iterator,BufferedIterator}
@@ -23,7 +22,8 @@ import scala.xml.pull.ProducerConsumerIterator
 import scala.math.exp
 import scala.collection.Iterator
 
-class SimpleNuralNetwork (hiddenum:Int,binarylen:Int,iterations:Int,rate:Double) {
+
+class SimpleNuralNetwork (hiddenum:Int,binarylen:Int,rate:Double) {
   
     
   class predictor(weight:Array[Array[Double]],example:Array[Array[Double]]) {
@@ -83,34 +83,5 @@ class SimpleNuralNetwork (hiddenum:Int,binarylen:Int,iterations:Int,rate:Double)
     updated
   }
   
-  
-  def initialize(data:RDD[Vector]):Vector = {
-    //Initialize weights to 0.05
-    val length=data.take(1)(0).size
-    val ar=new Array[Double](length)
-    val weight=new DenseVector(ar.map(_ +0.05))
-    weight
-  }
-  
-  val weight = new MultiUnits(3,100).Units
-  //weight initialize and update
-  //initialize do not need example
-  //update need example
-  val example = new MultiUnits(3,100)
-  //example acquire infomation from data
-  
-  
-  class Weight{
-    def initialize
-    def update
-
-    
-  }
-  
-
-    
-
-  
-
   
 }

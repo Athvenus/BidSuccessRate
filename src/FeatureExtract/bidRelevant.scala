@@ -1,6 +1,5 @@
 package FeatureExtract
 
-import FeatureExtract.SingleVariableAnalyzer
 
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.functions._
@@ -11,7 +10,7 @@ import org.apache.spark.sql.DataFrameStatFunctions
 import org.apache.spark.sql.ColumnName
 import org.apache.spark.mllib.random.ExponentialGenerator
 
-class bidRelevant (data:DataFrame) {
+class BidRelevant (data:DataFrame) {
   
   val bidRelevantDataFrame=data.select("ex_id","mininum_cpm","win_price","max_cpm")
   
