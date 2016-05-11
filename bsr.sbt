@@ -17,5 +17,6 @@ libraryDependencies ++= Seq(
 resolvers ++=Seq(
   "Maven Repository" at "http://repo.maven.apache.org/maven2",
   "Apache Repository" at "https://repository.apache.org/content/repositories/releases",
-  "JBoss Repository" at "https://repository.jboss.org/nexus/content/repositories/releases/"
+  "JBoss Repository" at "https://repository.jboss.org/nexus/content/repositories/releases/",
+  "Conjars" at "https://clojars.org/repo"
    )
