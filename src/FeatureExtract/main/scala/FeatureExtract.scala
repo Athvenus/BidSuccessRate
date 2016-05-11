@@ -3,32 +3,43 @@ package FeatureExtract
 
 
 import org.apache.spark.sql.DataFrame
+import org.apache.spark.SparkContext
+import org.apache.spark.SparkConf
 
 
-
-object FeatureEextract {
+object FeatureExtract {
   
   def main(args:Array[String]) {
   
+    val conf = new SparkConf().setAppName("FeatureExtract")
+    val sc = new SparkContext(conf)
+    
     val sucessPath = "/user/hive/warehouse/bdl_dmp/plat=baidu/ds=2016-04-18/rt=1"
     val bidPath = "/user/hive/warehouse/bdl_dmp/plat=baidu/ds=2016-04-18/rt=14"
     val metaPath = "/opt/dmp/mspace/"
   
-    val sucessDF = selectsucess(new DataFrameLoader(3,2,sucessPath).read)
-    val bidDF = selectbid(new DataFrameLoader(2,2,bidPath).read)
-  
-  
-    val joinDF = new BinaryClassificationJoiner(bidDF,sucessDF).JoinedData
-  
+    //Load Basic DataFrame
+    val successDF = selectsuccess(new DataFrameLoader(sc,3,2,sucessPath).read)
+    val bidDF = selectbid(new DataFrameLoader(sc,2,2,bidPath).read)
+    println(successDF.printSchema,bidDF.printSchema)
+    
+    //Join Data Together
+    val joinDF = new BinaryClassificationJoiner(bidDF,successDF).JoinedData
+    println(joinDF.printSchema)
+    
+    //Get bidRelevant and bidIrrelevant Feature
     val bidRelevant = new BidRelevant(joinDF).bidRelevant
     val bidIrrelevant = new BidIrrelevant(joinDF).bidIrrelevant
+    println(bidRelevant.printSchema,bidIrrelevant.printSchema)
     
-    val metaFeature = new MetaFeatureSaver(bidRelevant,bidIrrelevant,metaPath)
+    //Score MetaFeature
+    val metaFeature = new MetaFeatureSaver(bidRelevant,bidIrrelevant,metaPath).metaFeature
+    println(metaFeature.printSchema)
     
   }
   
   
-  def selectsucess(data:DataFrame):DataFrame = {
+  def selectsuccess(data:DataFrame):DataFrame = {
     val sucess = data.select("ex_id","rtb_price","mininum_cpm","max_cpm")
     sucess
   }
