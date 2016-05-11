@@ -1,13 +1,13 @@
-package FeatureExtract
+package FeatureExtract.main.scala
 
 
-
+import FeatureExtract._
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkConf
 
 
-object FeatureExtract {
+object FeatureExtracter {
   
   def main(args:Array[String]) {
   
@@ -53,7 +53,5 @@ object FeatureExtract {
         "ad_schedule_id","ad_project_id","adplan_id","page_title","ad_showhours","ad_showhours_weight")
     bid
   }
-  
-  
   
 }
