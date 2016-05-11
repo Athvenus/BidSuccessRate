@@ -1,8 +1,9 @@
-package BidSuccessRate.test.scala
+package BidSuccessRate
 
 
 
 object BidSuccessRateTrainer  {
+  
   def main(args:Array[String]) {
     
     

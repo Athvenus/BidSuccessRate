@@ -1,4 +1,4 @@
-package BidSuccessRate.main.scala
+package BidSuccessRate
 
 
 

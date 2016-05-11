@@ -1,12 +1,8 @@
-package FeatureExtract.main.scala
+package FeatureExtract
+
+
 
 import org.apache.spark.sql.DataFrame
-import FeatureExtract.BidIrrelevant
-import FeatureExtract.BidRelevant
-import FeatureExtract.BinaryClassificationJoiner
-import FeatureExtract.DataFrameLoader
-import FeatureExtract.MetaFeatureSaver
-
 
 
 
@@ -18,7 +14,7 @@ object FeatureEextract {
     val bidPath = "/user/hive/warehouse/bdl_dmp/plat=baidu/ds=2016-04-18/rt=14"
     val metaPath = "/opt/dmp/mspace/"
   
-    val sucessDF = selectsucess(new DataFrameLoader(3,2,sucessPath).read)
+    val sucessDF = selectsuccess(new DataFrameLoader(3,2,sucessPath).read)
     val bidDF = selectbid(new DataFrameLoader(2,2,bidPath).read)
   
   

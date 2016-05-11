@@ -1,12 +1,8 @@
-package FeatureExtract.test.scala
+package FeatureExtract
+
+
 
 import org.apache.spark.sql.DataFrame
-import FeatureExtract.BidIrrelevant
-import FeatureExtract.BidRelevant
-import FeatureExtract.BinaryClassificationJoiner
-import FeatureExtract.DataFrameLoader
-import FeatureExtract.MetaFeatureSaver
-
 
 
 
