@@ -18,5 +18,8 @@ resolvers ++=Seq(
   "Maven Repository" at "http://repo.maven.apache.org/maven2",
   "Apache Repository" at "https://repository.apache.org/content/repositories/releases",
   "JBoss Repository" at "https://repository.jboss.org/nexus/content/repositories/releases/",
-  "Conjars" at "https://clojars.org/repo"
+  "Conjars" at "https://conjars.org/repo",
+  "Clojars" at "https://clojars.org/repo",
+  "Plugins" at "http://repo.spring.io/plugins-release",
+  "Sonatype" at "http://oss.sonatype.org/content/group/public/"
    )
