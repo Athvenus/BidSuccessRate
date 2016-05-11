@@ -1,4 +1,4 @@
-package FeatureExtract.main.scala
+package FeatureExtract.test.scala
 
 import org.apache.spark.sql.DataFrame
 import FeatureExtract.BidIrrelevant
@@ -10,7 +10,7 @@ import FeatureExtract.MetaFeatureSaver
 
 
 
-object FeatureEextract {
+object FeatureEextract extends App {
   
   def main(args:Array[String]) {
   

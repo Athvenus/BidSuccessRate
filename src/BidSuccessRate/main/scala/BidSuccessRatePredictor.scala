@@ -1,5 +1,9 @@
-package BidSuccessRate
+package BidSuccessRate.main.scala
 
-object BidSuccessRatePredictor extends App {
+
+
+
+
+object BidSuccessRatePredictor {
   
 }

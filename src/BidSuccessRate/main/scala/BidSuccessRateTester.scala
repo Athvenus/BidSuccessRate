@@ -1,12 +1,7 @@
-package BidSuccessRate
+package BidSuccessRate.main.scala
 
 
-import org.apache.spark.SparkContext
-import org.apache.spark.SparkConf
-import org.apache.spark.rdd.RDD
-
-
-object BidSuccessRateTester extends App {
+object BidSuccessRateTester {
    def main(args:Array[String]) {
      
    }
