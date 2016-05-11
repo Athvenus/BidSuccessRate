@@ -2,15 +2,15 @@ name := "BidSuccessRate Project"
 
 version := "1.0"
 
-scalaVersion := "2.10.5"
+
 
 libraryDependencies ++= Seq(
-  "org.apache.spark"%%"spark-core"%"1.6.1",
-  "org.apache.spark"%%"spark-mllib"%"1.6.1",
+  "org.apache.spark"%%"spark-core_2.10"%"1.6.1",
+  "org.apache.spark"%%"spark-mllib_2.10"%"1.6.1",
   "org.apache.hadoop"%%"hadoop-common"%"2.6.1",
   "org.apache.hive"%%"hive-exec"%"1.2.1",
-  "org.apache.spark"%%"spark-sql"%"1.6.1",
-  "org.apache.spark"%%"spark-hive"%"1.6.1"
+  "org.apache.spark"%%"spark-sql_2.10"%"1.6.1",
+  "org.apache.spark"%%"spark-hive_2.10"%"1.6.1"
   )
   
 resolvers ++=Seq(
