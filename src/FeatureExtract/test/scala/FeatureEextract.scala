@@ -10,7 +10,7 @@ import FeatureExtract.MetaFeatureSaver
 
 
 
-object FeatureEextract extends App {
+object FeatureEextract {
   
   def main(args:Array[String]) {
   

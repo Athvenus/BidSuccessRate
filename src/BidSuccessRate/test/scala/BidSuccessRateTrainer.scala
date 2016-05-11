@@ -1,8 +1,8 @@
-package BidSuccessRate.main.scala
+package BidSuccessRate.test.scala
 
 
 
-object BidSuccessRateTrainer extends App {
+object BidSuccessRateTrainer  {
   def main(args:Array[String]) {
     
     
