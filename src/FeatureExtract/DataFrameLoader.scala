@@ -32,10 +32,9 @@ import org.apache.spark.rdd.RDD
  */
 
 
-class DataFrameLoader (Context:Int,fileType:Int,filePath:String) {
+class DataFrameLoader (sc:SparkContext,Context:Int,fileType:Int,filePath:String) {
   //Get DataFrame or RDD
-  val conf = new SparkConf().setAppName("appName").setMaster("master")
-  val sc = new SparkContext(conf)
+  
   val sqlContext = new SQLContext(sc)
   val hiveContext = new HiveContext(sc)
   
@@ -76,6 +75,14 @@ class DataFrameLoader (Context:Int,fileType:Int,filePath:String) {
       }
       //case (3,3) =>
     }
+  }
+  
+  def reschema:DataFrame = {
+    val df = read
+    val rddf = df.map(t => t)
+    val schema = new BidDataSchema().struct
+    val ndf = sqlContext.createDataFrame(rddf,schema)
+    ndf
   }
   
   

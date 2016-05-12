@@ -19,8 +19,8 @@ object FeatureExtracter {
     val metaPath = "/opt/dmp/mspace/"
   
     //Load Basic DataFrame
-    val successDF = selectsuccess(new DataFrameLoader(sc,3,2,sucessPath).read)
-    val bidDF = selectbid(new DataFrameLoader(sc,2,2,bidPath).read)
+    val successDF = selectsuccess(new DataFrameLoader(sc,3,2,sucessPath).reschema)
+    val bidDF = selectbid(new DataFrameLoader(sc,3,2,bidPath).reschema)
     println(successDF.printSchema,bidDF.printSchema)
     
     //Join Data Together
@@ -40,7 +40,7 @@ object FeatureExtracter {
   
   
   def selectsuccess(data:DataFrame):DataFrame = {
-    val sucess = data.select("ex_id","rtb_price","mininum_cpm","max_cpm")
+    val sucess = data.select("ex_id","rtb_price","max_cpm")
     sucess
   }
   
@@ -50,7 +50,7 @@ object FeatureExtracter {
         "detected_language","url","referer","site_category","site_quality","page_type","adslot_type","adsize",
         "slot_visibility","ask_creative_type","advertiser_id","creative_type","channel_id","request_type",
         "request_time","client_user_browser","client_user_os","client_user_screen","adspace_id","adspace_website_id",
-        "ad_schedule_id","ad_project_id","adplan_id","page_title","ad_showhours","ad_showhours_weight")
+        "ad_schedule_id","ad_project_id","adplan_id","page_title","ad_showhours","ad_showhours_weight","mininum_cpm")
     bid
   }
   

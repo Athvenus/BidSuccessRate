@@ -3,6 +3,7 @@ package FeatureExtract
 import org.apache.spark.sql.hive.HiveContext
 import org.apache.spark.sql._
 import org.apache.spark.sql.types._
+import org.apache.spark.sql.types.{StructType,StructField,StringType,IntegerType,DoubleType}
 
 class BidDataSchema {
   
@@ -32,7 +33,7 @@ class BidDataSchema {
   val adStruct=
     StructType(
         StructField("excluded_product_category",StringType,true)::
-        StructField("adblock_key",IntegerType,true)::
+        StructField("adblock_key",StringType,true)::
         StructField("sequence_id",IntegerType,true)::
         StructField("adslot_type",IntegerType,true)::
         StructField("adsize",StringType,true)::
@@ -87,7 +88,7 @@ class BidDataSchema {
         StructField("adspace_total_type",IntegerType,true)::
         StructField("adspace_total_prices",DoubleType,true)::
         StructField("adspace_cost",DoubleType,true)::
-        StructField("adspace_cost",StringType,true)::
+        StructField("adspace_type",IntegerType,true)::
         StructField("ad_total_prices",DoubleType,true)::
         StructField("ad_total_money",DoubleType,true)::
         StructField("exdata",StringType,true)::
@@ -118,7 +119,7 @@ class BidDataSchema {
         StructField("page_quality",IntegerType,true)::
         StructField("page_vertical",StringType,true)::
         StructField("excluded_product_category",StringType,true)::
-        StructField("adblock_key",IntegerType,true)::
+        StructField("adblock_key",StringType,true)::
         StructField("sequence_id",IntegerType,true)::
         StructField("adslot_type",IntegerType,true)::
         StructField("adsize",StringType,true)::
@@ -173,7 +174,7 @@ class BidDataSchema {
         StructField("adspace_total_type",IntegerType,true)::
         StructField("adspace_total_prices",DoubleType,true)::
         StructField("adspace_cost",DoubleType,true)::
-        StructField("adspace_cost",StringType,true)::
+        StructField("adspace_type",IntegerType,true)::
         StructField("ad_total_prices",DoubleType,true)::
         StructField("ad_total_money",DoubleType,true)::
         StructField("exdata",StringType,true)::
@@ -189,5 +190,6 @@ class BidDataSchema {
        StructField("user",userStruct,true)::
        StructField("site",siteStruct,true)::
        StructField("ad",adStruct,true)::Nil)
+  
   
 }

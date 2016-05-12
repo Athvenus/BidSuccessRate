@@ -9,7 +9,7 @@ import org.apache.hadoop.hive.ql.io.orc.OrcSerde
 import org.apache.hadoop.hive.ql.io.orc.RecordReader
 import org.apache.hadoop.hive.ql.io.orc.OrcFile
 import org.apache.hadoop.hive.ql.io.orc.OrcStruct
-import org.apache.hadoop.hive.serde2.objectinspector.StructField
+//import org.apache.hadoop.hive.serde2.objectinspector.StructField
 //import org.apache.hadoop.hive.serde2.objectinspector.StructObjectInspector
 import org.apache.hadoop.mapred.FileInputFormat
 import org.apache.hadoop.mapred.RecordReader
@@ -64,8 +64,8 @@ class join(bidPath:String,winPath:String) {
   
   val adf=sqlContext.createDataFrame(a,s3)
 
-  val windf = sqlContext.createDataFrame(winRDD,s3)
-  val biddf = sqlContext.createDataFrame(bidRDD,s3)
+  val windf = sqlContext.createDataFrame(a,s3)
+  val biddf = sqlContext.createDataFrame(a,s3)
   
   //Join Operation
   val joinedf =biddf.join(windf,Seq("A"),"left_outer")
@@ -85,17 +85,17 @@ class join(bidPath:String,winPath:String) {
   val rwinedf=winedf.withColumnRenamed("L","l")
   
   
-  val x=bsrfeature.map(x:Row => x.toSeq)
+  //val x=bsrfeature.map(x:Row => x.toSeq)
   
   
   def feature_extrct()={}
   
-  val bsrfeature=joinedf.map(x => feature_extrct(x))
+  //val bsrfeature=joinedf.map(x => feature_extrct(x))
   
   
   
   
-  bsrfeature.toDF().insertInto("bsr_bds_snn")
+  //bsrfeature.toDF().insertInto("bsr_bds_snn")
   hiveContext.sql("insert into bsr_bds_snn patition() select ")
   
 }

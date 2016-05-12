@@ -31,7 +31,7 @@ class SimpleNuralNetworkTrainer (data:RDD[String],iterations:Int,hiddenum:Int,bi
   }
   
   
-  data.map(x => toDouble(x)).foreachPartition(x => convergence+=x)
+  //data.map(x => toDouble(x)).foreachPartition(x => convergence+=x)
 
   def loss(real:Double,predict:Double):Double = {
     predict
