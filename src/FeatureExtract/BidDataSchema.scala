@@ -191,5 +191,12 @@ class BidDataSchema {
        StructField("site",siteStruct,true)::
        StructField("ad",adStruct,true)::Nil)
   
-  
+  val corrstruct=
+      StructType(
+        StructField("ex_id",StringType,true)::
+        StructField("floor_second",DoubleType,true)::
+        StructField("floor_highest",DoubleType,true)::
+        StructField("second_highest",DoubleType,true)::Nil)
+        
+        
 }

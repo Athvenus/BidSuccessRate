@@ -4,6 +4,7 @@ package FeatureExtract.main.scala
 import FeatureExtract._
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.SparkContext
+import org.apache.spark.sql.SQLContext
 import org.apache.spark.SparkConf
 
 
@@ -13,6 +14,7 @@ object FeatureExtracter {
   
     val conf = new SparkConf().setAppName("FeatureExtract")
     val sc = new SparkContext(conf)
+    val sqlContext = new SQLContext(sc)
     
     val sucessPath = "/user/hive/warehouse/bdl_dmp/plat=baidu/ds=2016-04-18/rt=1"
     val bidPath = "/user/hive/warehouse/bdl_dmp/plat=baidu/ds=2016-04-18/rt=14"
@@ -28,7 +30,7 @@ object FeatureExtracter {
     println(joinDF.printSchema)
     
     //Get bidRelevant and bidIrrelevant Feature
-    val bidRelevant = new BidRelevant(joinDF).bidRelevant
+    val bidRelevant = new BidRelevant(joinDF,sqlContext,sc).bidRelevant
     val bidIrrelevant = new BidIrrelevant(joinDF).bidIrrelevant
     println(bidRelevant.printSchema,bidIrrelevant.printSchema)
     
