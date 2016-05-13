@@ -18,7 +18,7 @@ object FeatureExtracter {
     
     val sucessPath = "/user/hive/warehouse/bdl_dmp/plat=baidu/ds=2016-04-18/rt=1"
     val bidPath = "/user/hive/warehouse/bdl_dmp/plat=baidu/ds=2016-04-18/rt=14"
-    val metaPath = "/opt/dmp/mspace/"
+    val metaPath = "/opt/dmp/mspace/160418"
   
     //Load Basic DataFrame
     val successDF = selectsuccess(new DataFrameLoader(sc,3,2,sucessPath).reschema)
