@@ -26,7 +26,7 @@ class BidRelevant (data:DataFrame,sqlContext:SQLContext,sc:SparkContext) {
     val dfloor_second = done.withColumn("floor_second",done("one")-done("mininum_cpm")/done("rtb_price"))
     val dfloor_highest = dfloor_second.withColumn("floor_highest",dfloor_second("one")-dfloor_second("mininum_cpm")/dfloor_second("max_cpm"))
     val dsecond_highest = dfloor_highest.withColumn("second_highest",dfloor_highest("one")-dfloor_highest("rtb_price")/dfloor_highest("max_cpm"))
-    val correlative = dsecond_highest.drop("one")
+    val correlative = dsecond_highest.drop("one").drop("mininum_cpm").drop("rtb_price").drop("max_cpm")
     correlative
   }
   
