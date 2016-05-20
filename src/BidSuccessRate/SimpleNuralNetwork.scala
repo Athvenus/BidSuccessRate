@@ -29,10 +29,11 @@ class SimpleNuralNetwork (hiddenum:Int,binarylen:Int,rate:Double) {
   class predictor(weight:Array[Array[Double]],example:Array[Array[Double]]) {
     //Output Layer Predictor
     var predictedvalue = 0.0
+    val simi_example = example.toBuffer.toArray
     for{i <- Iterator.range(0,hiddenum)}{
       val outputweight = weight(hiddenum+1)(i)
       val perceivedvalue = new LinearPerceptron (weight(i+1),example(i+1),"sigmoid").perception
-      example(hiddenum+1).update(i,perceivedvalue)
+      simi_example(hiddenum+1).update(i,perceivedvalue)
       predictedvalue += outputweight*perceivedvalue
  
     }
@@ -41,7 +42,7 @@ class SimpleNuralNetwork (hiddenum:Int,binarylen:Int,rate:Double) {
       predictedvalue
     }
     def update:Array[Array[Double]] = {
-      example
+      simi_example
     }
   }
   
@@ -65,7 +66,7 @@ class SimpleNuralNetwork (hiddenum:Int,binarylen:Int,rate:Double) {
   }
   
   
-  def update(weight:Array[Array[Double]],example:Array[Array[Double]],rate:Double): Array[Array[Double]] = {
+  def update(weight:Array[Array[Double]],example:Array[Array[Double]]): Array[Array[Double]] = {
     val updated = weight.toBuffer.toArray
     for{i <- Iterator.range(1,hiddenum+1)}{
       for{j <- Iterator.range(0,weight(i).length)}{

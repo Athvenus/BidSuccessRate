@@ -1,0 +1,5 @@
+package BidSuccessRate
+
+class Updater {
+  
+}

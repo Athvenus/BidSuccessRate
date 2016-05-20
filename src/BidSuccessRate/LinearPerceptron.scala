@@ -1,7 +1,7 @@
 package BidSuccessRate
 
 import org.apache.spark.mllib.linalg.Vector
-import scala.math._
+import scala.math.exp
 
 class LinearPerceptron (weight:Array[Double],example:Array[Double],delta:String) {
   

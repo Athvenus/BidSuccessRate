@@ -1,19 +1,37 @@
 package FeatureExtract
 
 
-
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.DataFrameWriter
+import org.apache.spark.sql.Row
+import org.apache.spark.serializer.KryoSerializer
 
-
-class MetaFeatureSaver (A:DataFrame,B:DataFrame,savePath:String){
+class MetaFeatureSaver (A:DataFrame,B:DataFrame,savePath:String) extends Serializable {
+  
   
   //metaPath="/opt/dmp/mspace/"
-  val metaFeature=A.join(B,Seq("ex_id"),"left_outer")
   
-  A.write.saveAsTable(savePath)
-  B.write.text(savePath)
+  val metaFeature = A.join(B,Seq("ex_id"),"left_outer")
+  val len = metaFeature.schema.length
+  val meta = metaFeature.map(r => text(r))
   
-  metaFeature.write.save(savePath)
+  meta.saveAsTextFile(savePath)
+  //metaFeature.write.save(savePath)
   
+  def text(r:Row):String = {
+    var s = ""
+    val len = r.length - 1
+    val field = Array(0,1,len-9,len)
+    for(i <- Iterator.range(0,len)){
+      if(r(i).isInstanceOf[NotNull]){
+        s+=r(i).toString+"\t"
+      }else{
+        s+="\t"
+      }
+      if(field.contains(i)){
+        s+="|"
+      }
+    }
+    s
+  }
 }

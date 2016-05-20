@@ -16,9 +16,9 @@ object FeatureExtracter {
     val sc = new SparkContext(conf)
     val sqlContext = new SQLContext(sc)
     
-    val sucessPath = "/user/hive/warehouse/bdl_dmp/plat=baidu/ds=2016-04-18/rt=1"
-    val bidPath = "/user/hive/warehouse/bdl_dmp/plat=baidu/ds=2016-04-18/rt=14"
-    val metaPath = "/opt/dmp/mspace/160418"
+    val sucessPath = "/user/hive/warehouse/bdl_dmp/plat=baidu/ds=2016-05-18/rt=1"
+    val bidPath = "/user/hive/warehouse/bdl_dmp/plat=baidu/ds=2016-05-18/rt=14"
+    val metaPath = "/opt/dmp/mspace/bsr/160518"
   
     //Load Basic DataFrame
     val successDF = selectsuccess(new DataFrameLoader(sc,3,2,sucessPath).reschema)
@@ -35,8 +35,7 @@ object FeatureExtracter {
     println(bidRelevant.printSchema,bidIrrelevant.printSchema)
     
     //Score MetaFeature
-    val metaFeature = new MetaFeatureSaver(bidRelevant,bidIrrelevant,metaPath).metaFeature
-    println(metaFeature.printSchema)
+    val meta = new MetaFeatureSaver(bidIrrelevant,bidRelevant,metaPath)
     
   }
   

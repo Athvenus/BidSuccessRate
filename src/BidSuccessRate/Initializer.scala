@@ -3,19 +3,23 @@ package BidSuccessRate
 import scala.collection.mutable.ArrayBuffer
 import scala.util.hashing.MurmurHash3
 import scala.collection.Iterator
-import scala.math._
+import java.math.BigInteger
+import scala.math.abs
+import java.lang.NumberFormatException
 
 
-class Initializer(hiddenum:Int,binarylen:Int,initialweight:Double) {
+class Initializer(data:String,hiddenum:Int,binarylen:Int,initialweight:Double) {
+  
+  val blocks = data.split("\\|")
+  val numericblock = blocks(3).split("\t").map(x => toDouble(x))
   
   def initd(data:String):Array[Array[Double]] = {
     //Initialize Information From Data
-    val blocks = data.split("\\|")
-    //Get Label
-    val example = ArrayBuffer(Array(blocks(1).toDouble))
-    //Get Binary Feature
+    //1.Get Label
+    val example = ArrayBuffer(Array(toDouble(blocks(1))))
+    //2.Get Binary Feature
     val binaryblock=blocks(2).split("\t")
-    example+=Array[Double](binarylen)
+    example+=new Array[Double](binarylen)
     for{i <- Iterator.range(0,binaryblock.length)}{
       val pos=hash(binaryblock(i))
       example(1).update(pos,1.0)
@@ -23,9 +27,10 @@ class Initializer(hiddenum:Int,binarylen:Int,initialweight:Double) {
     for{j <- Iterator.range(1,hiddenum)}{
       example+=example(1)
     }
-    //Get Numeric Feature
-    val numericblock=blocks(3).split("\t").map(x => x.toDouble)
+    //3.Get Numeric Feature
     example+=numericblock
+    //4.Get Hidden Values
+    example+=new Array[Double](hiddenum+1)
     
     example.toArray
   }
@@ -36,13 +41,28 @@ class Initializer(hiddenum:Int,binarylen:Int,initialweight:Double) {
     pos
   }
   
+  def toDouble(str:String):Double = {
+    val num = 0.0
+    try{
+      val num = str.trim.toDouble
+    }catch{
+      case ex : NumberFormatException => {
+        val num = 0.0
+      }
+    }
+    num
+  }
+  
   def initw:Array[Array[Double]] = {
     //Initialize Model Weight
-    val units = new MultiUnits(hiddenum,binarylen).Units
+    val numericlen = numericblock.length
+    val units = new MultiUnits(hiddenum,binarylen,numericlen).Units
     val weight = ArrayBuffer(Array(0.0))
-    for{i <- Iterator.range(1,hiddenum+1)}{
+    for{i <- Iterator.range(1,units.length)}{
       weight+=units(i).map(_ +initialweight)
     }
     weight.toArray
   }
 }
+
+//Every Independent function is OK,but once put them together problem comes out.
