@@ -8,20 +8,22 @@ import scala.math.abs
 import java.lang.NumberFormatException
 
 
-class Initializer(data:String,hiddenum:Int,binarylen:Int,initialweight:Double) {
+class Initializer(data:String,hiddenum:Int,binarylen:Int,initialweight:Double) extends Serializable{
   
   val blocks = data.split("\\|")
   val numericblock = blocks(3).split("\t").map(x => toDouble(x))
   
-  def initd(data:String):Array[Array[Double]] = {
+  def initd(str:String):Array[Array[Double]] = {
     //Initialize Information From Data
+    val blocks = str.split("\\|")
+    val numericblock = blocks(3).split("\t").map(x => toDouble(x))
     //1.Get Label
     val example = ArrayBuffer(Array(toDouble(blocks(1))))
     //2.Get Binary Feature
     val binaryblock=blocks(2).split("\t")
     example+=new Array[Double](binarylen)
     for{i <- Iterator.range(0,binaryblock.length)}{
-      val pos=hash(binaryblock(i))
+      val pos=hash(i.toString+binaryblock(i))
       example(1).update(pos,1.0)
     }
     for{j <- Iterator.range(1,hiddenum)}{

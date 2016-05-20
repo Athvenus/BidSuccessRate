@@ -26,7 +26,7 @@ class MetaFeatureSaver (A:DataFrame,B:DataFrame,savePath:String) extends Seriali
       if(r(i).isInstanceOf[NotNull]){
         s+=r(i).toString+"\t"
       }else{
-        s+="\t"
+        s+="null"+"\t"
       }
       if(field.contains(i)){
         s+="|"

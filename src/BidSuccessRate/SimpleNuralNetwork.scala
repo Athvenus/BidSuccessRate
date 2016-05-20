@@ -23,7 +23,7 @@ import scala.math.exp
 import scala.collection.Iterator
 
 
-class SimpleNuralNetwork (hiddenum:Int,binarylen:Int,rate:Double) {
+class SimpleNuralNetwork (hiddenum:Int,binarylen:Int,rate:Double) extends Serializable{
   
     
   class predictor(weight:Array[Array[Double]],example:Array[Array[Double]]) {

@@ -24,7 +24,6 @@ import org.apache.spark.util.TaskCompletionListener
 
 
 
-
 class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int,hiddenum:Int,binarylen:Int,initialWeight:Double,rate:Double,batchSize:Int,convergence:Double) {
   
   //Initialize Overall Model
@@ -35,16 +34,69 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
   var weight = initializer.initw
   var iteration = 0
   
+  object MultiUnitsAccumulatorParam extends AccumulatorParam[Array[Array[Double]]]{
+    def zero(initialValue:Array[Array[Double]]):Array[Array[Double]] = {
+      weight 
+    }
+    def addInPlace(A:Array[Array[Double]],B:Array[Array[Double]]):Array[Array[Double]] = {
+      val sum = A.toBuffer.toArray
+      for(i <- Iterator.range(0,A.length)){
+        for(j <- Iterator.range(0,A(0).length)){
+          sum(i).update(j,A(i)(j)+B(i)(j))
+        }
+      }
+      sum
+    }
+  }
+  
+  
+  var Weight = sc.accumulator(weight)(MultiUnitsAccumulatorParam)
+  var RMSE = sc.accumulator(0.0)
+  
+  
   //Initialize Batch Model
   val numExample = data.count().toInt
   val numPartition = numExample/batchSize
+  
+  
+  
   
   //Algorithm Body
   while(rmse > convergence && iteration > iterations){
     
     val snn = new SimpleNuralNetwork(hiddenum,binarylen,rate)
     
-    var examples = data.repartition(numPartition).map(s  => initializer.initd(s))
+    def updateBatchModel(iter:Iterator[Array[Array[Double]]]):Iterator[Seq[Array[Array[Double]]]] = {
+      //Update weight,predict and hidden example values
+      var w = Weight.value
+      var d = example
+      var M = Iterator(Seq(w,d)) 
+      println(M)
+      val len = iter.length
+      M.next
+      for(i <- Iterator.range(0,len-1)){
+        val eg = iter.next
+        println("iter unit is",i,eg)
+        w = snn.update(w,eg)
+        d = new snn.predictor(w,eg).update
+        M ++= Iterator(Seq(w,d))
+      }
+      Weight.add(minus(w,Weight.value))
+      M
+      //Do Something To Update The Overall Model,Maybe RMSE
+    }
+    
+    def minus(A:Array[Array[Double]],B:Array[Array[Double]]):Array[Array[Double]] = {
+      val difference = A.toBuffer.toArray
+      for(i <- Iterator.range(0,A.length)){
+        for(j <- Iterator.range(0,A(0).length)){
+          difference(i).update(j,A(i)(j)-B(i)(j))
+        }
+      }
+      difference
+    }  
+    
+    val examples = data.repartition(numPartition).map(s  => initializer.initd(s))
     
     var models = examples.mapPartitions(updateBatchModel)
     
@@ -53,105 +105,22 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
     val simi_examples = models.map(m => m(1))
     
     val losses = models.map(m => minus(m(1),m(0)))
+        
+    rmse = RMSE.value
     
-    def updateBatchModel(iter:Iterator[Array[Array[Double]]]):Iterator[Seq[Array[Array[Double]]]] = {
-      //Update weight,predict and hidden example values
-      var w = weight
-      var d = example
-      var M = Iterator(Seq(w,d)) 
-      M.next
-      for(i <- Iterator.range(0,iter.length)){
-        val eg = iter.next
-        w = snn.update(w,eg)
-        d = new snn.predictor(w,eg).update
-        M ++= Iterator(Seq(w,d))
-      }
-      M
-      //Do Something To Update The Overall Model,Maybe RMSE
-    }
-    
-    
-    def getModelUpdate(iter:Iterator[Array[Array[Double]]]):Array[Array[Double]] = {weight}
-    def getModelError(iter:Iterator[Array[Array[Double]]]):Array[Array[Double]] = {weight}
-    
-    def minus(A:Array[Array[Double]],B:Array[Array[Double]]):Array[Array[Double]] = {
-      val difference = A.toBuffer.toArray
-      for(i <- Iterator.range(0,A.length)){
-        for(j <- Iterator.range(0,A(0).length)){
-          difference(i).update(j,A(i)(j)-B(i)(j))
-        }
-      }
-      difference
-    }
-    
-    rmse+=0
     iteration+=1
     
   }
   
-
-
-  object MultiUnitsAccumulatorParam extends AccumulatorParam[Array[Array[Double]]]{
-    def zero:Array[Array[Double]] = {
-      initializer.initw
-    }
-    def addInPlace(A:Array[Array[Double]],B:Array[Array[Double]]):Array[Array[Double]] = {
-      minus(A,B)
-    }
-  }
-  
-  val model = sc.accumulator(initializer.initw)(MultiUnitsAccumulatorParam)
-  //every partition update will be executed in this model
-  
-  val init_weight = sc.broadcast()
-  
-  //Broadcast the init weight and example to all of the machines
-  
-
-
-  val snn = new SimpleNuralNetwork (2,1000,0.05)
-  val examples = data.map(s => initializer.initd(s))
-  
-  
-    
-    val updatedWeight = initialWeight
-    
-    //This function will be execute total update
-    
-    def minus(A:Array[Array[Double]],B:Array[Array[Double]]):Array[Array[Double]] = {
-      val difference = A.toBuffer.toArray
-      for(i <- Iterator.range(0,A.length)){
-        for(j <- Iterator.range(0,A(0).length)){
-          difference(i).update(j,A(i)(j)-B(i)(j))
-        }
-      }
-      difference
-    }
-    
   
   class OutputArrangement
+  
+  val model = Weight.value
+  
   //This part output some evaluation metrics
   //Include hidden loss changing curve,out loss changing curve,
   //Include training AUC FScore ROC etc.
   //Include hidden predict values
-  
-  val examples_num = data.count() 
-  val iteration_nums = 100
-  val patitions_nums = (examples_num/iteration_nums).toInt
-  val d = data.repartition(patitions_nums)
-  
-  val OutputLoss = ArrayBuffer(1.0)
-  val HiddenLoss = ArrayBuffer(ArrayBuffer(1.0))
-  for{i <- Iterator.range(1,hiddenum)}{
-    HiddenLoss += HiddenLoss(0)
-  }
-  data.repartition(45)
-  
-  //val weight = sc.accumulator(0)
-  
-  //data.map(x => toDouble(x)).foreachPartition(x => convergence+=x)
-
-
   
   //Accumulator need SparkContext
   //If we decide to write an independent class then we want to reuse which part 

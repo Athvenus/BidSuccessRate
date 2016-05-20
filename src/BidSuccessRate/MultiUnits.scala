@@ -13,7 +13,7 @@ class MultiUnits (hiddenum:Int,binarylen:Int,numericlen:Int) {
   val Binary = new Array[Double](binarylen)
   val Out = new Array[Double](hiddenum+1)
  
-  for(i <- Iterator.range(0,hiddenum-1))
+  for(i <- Iterator.range(0,hiddenum))
     UnitsBuffer+=Binary
   UnitsBuffer+=Numeric
   UnitsBuffer+=Out
