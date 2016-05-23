@@ -3,6 +3,8 @@ package BidSuccessRate
 
 import scala.collection.Iterator
 import scala.collection.mutable.ArrayBuffer
+import scala.math.pow
+import scala.math.sqrt
 
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
@@ -21,7 +23,6 @@ import org.apache.spark.status.api.v1.TaskMetricDistributions
 import org.apache.spark.status.api.v1.TaskMetrics
 import org.apache.spark.status.api.v1.TaskSorting
 import org.apache.spark.util.TaskCompletionListener
-
 
 
 class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int,hiddenum:Int,binarylen:Int,initialWeight:Double,rate:Double,batchSize:Int,convergence:Double) {
@@ -49,17 +50,13 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
     }
   }
   
-  
   var Weight = sc.accumulator(weight)(MultiUnitsAccumulatorParam)
-  var RMSE = sc.accumulator(0.0)
-  
+  var MSE = sc.accumulator(0.0)
+  var NUM = sc.accumulator(0)
   
   //Initialize Batch Model
   val numExample = data.count().toInt
   val numPartition = numExample/batchSize
-  
-  
-  
   
   //Algorithm Body
   while(rmse > convergence && iteration > iterations){
@@ -70,18 +67,23 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
       //Update weight,predict and hidden example values
       var w = Weight.value
       var d = example
+      var p = new snn.predictor(w,d)
       var M = Iterator(Seq(w,d)) 
-      println(M)
       val len = iter.length
+      var L = 0.0
       M.next
       for(i <- Iterator.range(0,len-1)){
         val eg = iter.next
         println("iter unit is",i,eg)
         w = snn.update(w,eg)
-        d = new snn.predictor(w,eg).update
+        p = new snn.predictor(w,eg)
+        d = p.update
         M ++= Iterator(Seq(w,d))
+        L += pow(p.predict - eg(0)(0),2)
       }
       Weight.add(minus(w,Weight.value))
+      MSE.add(L)
+      NUM.add(len)
       M
       //Do Something To Update The Overall Model,Maybe RMSE
     }
@@ -106,16 +108,19 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
     
     val losses = models.map(m => minus(m(1),m(0)))
         
-    rmse = RMSE.value
+    rmse = MSE.value/NUM.value
     
     iteration+=1
-    
+   
   }
   
   
-  class OutputArrangement
-  
+ //OutputArrangement 
   val model = Weight.value
+  
+  println("Model Training Finished.")
+  
+  
   
   //This part output some evaluation metrics
   //Include hidden loss changing curve,out loss changing curve,
