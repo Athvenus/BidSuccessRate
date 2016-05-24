@@ -1,21 +1,13 @@
-package FeatureExtract
-
-
-import scala.io.Source
+package main.scala.FeatureExtract
 
 import org.apache.spark.SparkContext
-import org.apache.spark.SparkConf
-
 import org.apache.spark.sql.SQLContext
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.DataFrame
-
 import org.apache.spark.sql.hive.HiveContext
 import org.apache.hadoop.io.NullWritable
 import org.apache.hadoop.hive.ql.io.orc.OrcInputFormat
 import org.apache.hadoop.hive.ql.io.orc.OrcStruct
-
-import org.apache.spark.rdd.RDD
 
 /***
  * Context={

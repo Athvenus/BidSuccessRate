@@ -1,26 +1,8 @@
-package BidSuccessRate
+package main.scala.BidSuccessRate
 
-import org.apache.spark.rdd.RDD
-import org.apache.spark.mllib.linalg.Vectors
-import org.apache.spark.mllib.linalg.Vector
-import org.apache.spark.mllib.linalg.SparseVector
-import org.apache.spark.mllib.linalg.DenseVector
-import org.apache.spark.mllib.linalg.DenseMatrix
-import org.apache.spark.mllib.linalg.Matrix
-
-import org.apache.spark.mllib.linalg.distributed.BlockMatrix
-import org.apache.spark.mllib.linalg.distributed.CoordinateMatrix
-import org.apache.spark.mllib.linalg.distributed.DistributedMatrix
-import org.apache.spark.mllib.linalg.distributed.RowMatrix
-
-import scala.collection.parallel.mutable.ParArray
-import scala.collection.parallel.immutable.ParVector
-import scala.collection.{Iterator,BufferedIterator}
-import scala.collection.immutable.{StreamIterator,VectorIterator}
-import scala.xml.pull.ProducerConsumerIterator
-
-import scala.math.exp
 import scala.collection.Iterator
+import scala.collection.Iterator
+
 
 
 class SimpleNuralNetwork (hiddenum:Int,binarylen:Int,rate:Double) extends Serializable{

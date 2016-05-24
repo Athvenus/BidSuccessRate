@@ -1,4 +1,4 @@
-package FeatureExtract
+package main.scala.FeatureExtract
 
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.functions._

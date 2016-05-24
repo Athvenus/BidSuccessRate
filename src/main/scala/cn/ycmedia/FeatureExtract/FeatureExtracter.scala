@@ -1,7 +1,6 @@
-package FeatureExtract.main.scala
+package main.scala.FeatureExtract
 
 
-import FeatureExtract._
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.SQLContext
@@ -16,9 +15,9 @@ object FeatureExtracter {
     val sc = new SparkContext(conf)
     val sqlContext = new SQLContext(sc)
     
-    val sucessPath = "/user/hive/warehouse/bdl_dmp/plat=baidu/ds=2016-05-17/rt=1"
-    val bidPath = "/user/hive/warehouse/bdl_dmp/plat=baidu/ds=2016-05-17/rt=14"
-    val metaPath = "/opt/dmp/mspace/bsr/160517"
+    val sucessPath = "/user/hive/warehouse/bdl_dmp/plat=baidu/ds=2016-05-22/rt=1"
+    val bidPath = "/user/hive/warehouse/bdl_dmp/plat=baidu/ds=2016-05-22/rt=14"
+    val metaPath = "/opt/dmp/mspace/bsr/160522"
   
     //Load Basic DataFrame
     val successDF = selectsuccess(new DataFrameLoader(sc,3,2,sucessPath).reschema)

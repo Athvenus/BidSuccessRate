@@ -1,36 +1,15 @@
-package data_extract
+package main.scala.FeatureExtract
 
 
 import org.apache.spark.SparkContext
-import org.apache.spark.rdd.RDD
-import org.apache.hadoop.mapred
-import org.apache.hadoop.hive.ql.io.orc.{OrcInputFormat,OrcOutputFormat}
-import org.apache.hadoop.hive.ql.io.orc.OrcSerde
-import org.apache.hadoop.hive.ql.io.orc.RecordReader
-import org.apache.hadoop.hive.ql.io.orc.OrcFile
+import org.apache.hadoop.hive.ql.io.orc.OrcInputFormat
 import org.apache.hadoop.hive.ql.io.orc.OrcStruct
-//import org.apache.hadoop.hive.serde2.objectinspector.StructField
-//import org.apache.hadoop.hive.serde2.objectinspector.StructObjectInspector
-import org.apache.hadoop.mapred.FileInputFormat
-import org.apache.hadoop.mapred.RecordReader
-
 import org.apache.hadoop.io.NullWritable
-import org.apache.hadoop.io.{ArrayWritable,BooleanWritable,ByteWritable,CompressedWritable,DoubleWritable,EnumSetWritable,FloatWritable,GenericWritable,IntWritable,LongWritable,MapWritable,NullWritable,ShortWritable,SortedMapWritable,TwoDArrayWritable,VersionedWritable,VIntWritable}
-
-import org.apache.hadoop.hive.conf.HiveConf
-import org.apache.hadoop.mapred.Mapper
-import org.apache.hadoop.hive.ql.io
-import org.apache.hadoop.tools.proto
-import org.apache.hadoop.tools.protocolPB
-import org.apache.hadoop.ipc.proto
-
-
+import org.apache.hadoop.io.NullWritable
 import org.apache.spark.sql.Row
-import org.apache.spark.sql.Column
 import org.apache.spark.sql.SQLContext
 import org.apache.spark.sql.types._
 import org.apache.spark.sql._
-
 import org.apache.spark.sql.hive.HiveContext
 
 

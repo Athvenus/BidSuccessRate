@@ -1,16 +1,9 @@
-package FeatureExtract
+package main.scala.FeatureExtract
 
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.SQLContext
-import org.apache.spark.sql.types.{StructType,StructField,StringType,IntegerType,DoubleType}
-import org.apache.hadoop.hive.ql.exec.UDF
-
-import org.apache.spark.mllib.stat.{MultivariateStatisticalSummary,Statistics}
-import org.apache.spark.sql.DataFrameStatFunctions
-import org.apache.spark.sql.ColumnName
-import org.apache.spark.mllib.random.ExponentialGenerator
 
 
 

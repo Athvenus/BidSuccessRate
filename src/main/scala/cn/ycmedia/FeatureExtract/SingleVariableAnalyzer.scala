@@ -1,11 +1,11 @@
-package FeatureExtract
+package main.scala.FeatureExtract
 
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.SQLContext
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.functions._
 import scala.collection.Iterator
-import org.apache.spark.sql.types.{StructType,StructField,StringType,IntegerType,DoubleType}
+import org.apache.spark.sql.types.{StructType, StructField, IntegerType, DoubleType}
 import org.apache.spark.sql.Row
 
 class SingleVariableAnalyzer (data:DataFrame,sqlContext:SQLContext,sc:SparkContext) {

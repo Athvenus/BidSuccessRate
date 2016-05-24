@@ -1,11 +1,10 @@
-package BidSuccessRate
+package main.scala.BidSuccessRate
+
 
 import scala.collection.mutable.ArrayBuffer
 import scala.util.hashing.MurmurHash3
 import scala.collection.Iterator
-import java.math.BigInteger
 import scala.math.abs
-import java.lang.NumberFormatException
 
 
 class Initializer(data:String,hiddenum:Int,binarylen:Int,initialweight:Double) extends Serializable{

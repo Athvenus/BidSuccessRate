@@ -1,6 +1,5 @@
-package FeatureExtract
+package main.scala.FeatureExtract
 
-import org.apache.spark.sql.hive.HiveContext
 import org.apache.spark.sql._
 import org.apache.spark.sql.types._
 import org.apache.spark.sql.types.{StructType,StructField,StringType,IntegerType,DoubleType}

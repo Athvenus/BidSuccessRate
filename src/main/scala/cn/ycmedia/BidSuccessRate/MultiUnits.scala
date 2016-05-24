@@ -1,9 +1,6 @@
-package BidSuccessRate
+package main.scala.BidSuccessRate
 
-import scala.collection.parallel.mutable.ParArray
 import scala.collection.mutable.ArrayBuffer
-import org.apache.spark.Accumulator
-import org.apache.spark.AccumulatorParam
 
 class MultiUnits (hiddenum:Int,binarylen:Int,numericlen:Int) {
   

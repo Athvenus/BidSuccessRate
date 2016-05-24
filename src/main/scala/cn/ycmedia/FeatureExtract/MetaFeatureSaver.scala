@@ -1,10 +1,8 @@
-package FeatureExtract
+package main.scala.FeatureExtract
 
 
 import org.apache.spark.sql.DataFrame
-import org.apache.spark.sql.DataFrameWriter
 import org.apache.spark.sql.Row
-import org.apache.spark.serializer.KryoSerializer
 
 class MetaFeatureSaver (A:DataFrame,B:DataFrame,savePath:String) extends Serializable {
   

@@ -1,28 +1,12 @@
-package BidSuccessRate
+package main.scala.BidSuccessRate
 
 
 import scala.collection.Iterator
-import scala.collection.mutable.ArrayBuffer
 import scala.math.pow
-import scala.math.sqrt
-
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
-import org.apache.spark.Accumulator
 import org.apache.spark.AccumulatorParam
 
-import org.apache.spark.mllib.evaluation.RegressionMetrics
-import org.apache.spark.mllib.evaluation.BinaryClassificationMetrics
-
-import org.apache.spark.TaskContext
-import org.apache.spark.scheduler.SparkListenerTaskStart
-import org.apache.spark.scheduler.SparkListenerTaskEnd
-import org.apache.spark.scheduler.TaskInfo
-import org.apache.spark.status.api.v1.TaskData
-import org.apache.spark.status.api.v1.TaskMetricDistributions
-import org.apache.spark.status.api.v1.TaskMetrics
-import org.apache.spark.status.api.v1.TaskSorting
-import org.apache.spark.util.TaskCompletionListener
 
 
 class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int,hiddenum:Int,binarylen:Int,initialWeight:Double,rate:Double,batchSize:Int,convergence:Double) {
