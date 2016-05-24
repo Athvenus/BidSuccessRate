@@ -1,4 +1,5 @@
-package main.scala.FeatureExtract
+package cn.ycmedia.FeatureExtract
+
 
 import org.apache.spark.sql._
 import org.apache.spark.sql.types._

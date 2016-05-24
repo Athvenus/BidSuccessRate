@@ -1,4 +1,4 @@
-package main.scala.BidSuccessRate
+package cn.ycmedia.BidSuccessRate
 
 import scala.collection.mutable.ArrayBuffer
 

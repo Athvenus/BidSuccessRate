@@ -1,6 +1,7 @@
-package main.scala.BidSuccessRate
+package cn.ycmedia.BidSuccessRate
 
 
+import cn.ycmedia.BidSuccessRate._
 import scala.collection.Iterator
 import scala.math.pow
 import org.apache.spark.SparkContext

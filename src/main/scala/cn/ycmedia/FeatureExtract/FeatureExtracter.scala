@@ -1,6 +1,6 @@
-package main.scala.FeatureExtract
+package cn.ycmedia.FeatureExtract
 
-
+import cn.ycmedia.FeatureExtract._
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.SQLContext

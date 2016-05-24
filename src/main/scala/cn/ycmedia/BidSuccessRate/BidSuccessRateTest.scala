@@ -1,4 +1,4 @@
-package main.scala.BidSuccessRate
+package cn.ycmedia.BidSuccessRate
 
 
 import org.apache.spark.SparkContext
