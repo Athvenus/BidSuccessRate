@@ -1,6 +1,6 @@
 package main.scala.BidSuccessRate
 
-import BidSuccessRate._
+
 import org.apache.spark.SparkContext
 
 
