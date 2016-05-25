@@ -47,7 +47,7 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
   println("These are some basic statistics: numExample ",numExample,"numPartition ",numPartition)
   
   //Algorithm Body
-  while(rmse > convergence && iteration > iterations){
+  while(rmse > convergence && iteration < iterations){
     
     val snn = new SimpleNuralNetwork(hiddenum,binarylen,rate)
     
