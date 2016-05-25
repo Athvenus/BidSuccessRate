@@ -20,6 +20,8 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
   var weight = initializer.initw
   var iteration = 0
   
+  println("These are basic initial parameters: rmse ",rmse,"dataExample ",dataExample,"example ",example,"weight ",weight)
+  
   object MultiUnitsAccumulatorParam extends AccumulatorParam[Array[Array[Double]]]{
     def zero(initialValue:Array[Array[Double]]):Array[Array[Double]] = {
       weight 
@@ -96,6 +98,8 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
     rmse = MSE.value/NUM.value
     
     iteration+=1
+    
+    println("This is iteration ",iteration,"rmse is",rmse)
    
   }
   
