@@ -62,8 +62,9 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
       var M = Iterator(Seq(w,d)) 
       val len = iter.length
       var L = 0.0
+      var i = 0
       M.next
-      for(i <- Iterator.range(0,len-1)){
+      while(iter.hasNext){
         val eg = iter.next
         println("iter unit is",i,eg)
         w = snn.update(w,eg)
@@ -71,6 +72,7 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
         d = p.update
         M ++= Iterator(Seq(w,d))
         L += pow(p.predict - eg(0)(0),2)
+        i += 1
       }
       Weight.add(minus(w,w0))
       MSE.add(L)
