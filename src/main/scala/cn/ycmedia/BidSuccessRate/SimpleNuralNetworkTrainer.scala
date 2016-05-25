@@ -54,7 +54,7 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
     
     var w0 = Weight.value 
     
-    println("In this iteration,start weight is ",w0,"Predicts is",w0(0)(0),"Hidden Weight is",w0(4)(0),w0(4)(1),w0(4)(2),w0(4)(3))
+    println("In this iteration,start weight is ",w0)
     
     def updateBatchModel(iter:Iterator[Array[Array[Double]]]):Iterator[Seq[Array[Array[Double]]]] = {
       //Update weight,predict and hidden example values
