@@ -44,7 +44,7 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
   var Weight = sc.accumulator(weight)(MultiUnitsAccumulatorParam)
   var MSE = sc.accumulator(pow(convergence,2))
   var NUM = sc.accumulator(1)
-  var RMSE_HISTORY = Array[Double](iterations)
+  var RMSE_HISTORY = new Array[Double](iterations)
   
   val examples = data.repartition(numPartition).map(s  => initializer.initd(s))
   var models = examples
