@@ -52,9 +52,11 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
     
     val snn = new SimpleNuralNetwork(hiddenum,binarylen,rate)
     
+    var w0 = Weight.value 
+    
     def updateBatchModel(iter:Iterator[Array[Array[Double]]]):Iterator[Seq[Array[Array[Double]]]] = {
       //Update weight,predict and hidden example values
-      var w = Weight.value
+      var w = w0
       var d = example
       var p = new snn.predictor(w,d)
       var M = Iterator(Seq(w,d)) 
@@ -70,7 +72,7 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
         M ++= Iterator(Seq(w,d))
         L += pow(p.predict - eg(0)(0),2)
       }
-      Weight.add(minus(w,Weight.value))
+      Weight.add(minus(w,w0))
       MSE.add(L)
       NUM.add(len)
       println("In this partition,loss sum",L,"iterator length is",len)
