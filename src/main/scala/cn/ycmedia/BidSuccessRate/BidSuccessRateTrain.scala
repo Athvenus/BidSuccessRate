@@ -1,13 +1,14 @@
 package cn.ycmedia.BidSuccessRate
 
 
-
+import org.apache.spark.SparkConf
 import org.apache.spark.SparkContext
 
 
 object BidSuccessRateTrain {
   def main(args:Array[String]) {
-    val sc=new SparkContext()
+    val conf = new SparkConf().set("spark.driver.maxResultSize","5G")
+    val sc=new SparkContext(conf)
     val documentPath = "/opt/dmp/mspace/bsr/160522"
     val data = sc.textFile(documentPath).randomSplit(Array(0.7, 0.3), seed = 11L)
     val training = data(0)
