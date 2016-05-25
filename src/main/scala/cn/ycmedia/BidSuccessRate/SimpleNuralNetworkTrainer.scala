@@ -4,6 +4,7 @@ package cn.ycmedia.BidSuccessRate
 import cn.ycmedia.BidSuccessRate._
 import scala.collection.Iterator
 import scala.math.pow
+import scala.math.sqrt
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
 import org.apache.spark.AccumulatorParam
@@ -36,7 +37,7 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
   }
   
   var Weight = sc.accumulator(weight)(MultiUnitsAccumulatorParam)
-  var MSE = sc.accumulator(0.0)
+  var MSE = sc.accumulator(pow(convergence,2))
   var NUM = sc.accumulator(1)
   
   //Initialize Batch Model
@@ -47,7 +48,7 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
   println("These are some basic statistics: numExample ",numExample,"numPartition ",numPartition,"MSE ",MSE,"NUM ",NUM)
   
   //Algorithm Body
-  while(rmse > convergence && iteration < iterations){
+  while(rmse >= convergence && iteration <= iterations){
     
     val snn = new SimpleNuralNetwork(hiddenum,binarylen,rate)
     
@@ -97,7 +98,7 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
     
     val losses = models.map(m => minus(m(1),m(0)))
         
-    rmse = MSE.value/NUM.value
+    rmse = sqrt(MSE.value/NUM.value)
     
     iteration+=1
     
