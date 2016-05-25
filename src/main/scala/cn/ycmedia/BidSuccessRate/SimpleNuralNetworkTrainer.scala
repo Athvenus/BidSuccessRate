@@ -10,7 +10,7 @@ import org.apache.spark.AccumulatorParam
 
 
 
-class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int,hiddenum:Int,binarylen:Int,initialWeight:Double,rate:Double,batchSize:Int,convergence:Double) {
+class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int,hiddenum:Int,binarylen:Int,initialWeight:Double,rate:Double,batchSize:Int,convergence:Double) extends Serializable {
   
   //Initialize Overall Model
   var rmse = 1.0
