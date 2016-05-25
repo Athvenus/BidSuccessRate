@@ -45,9 +45,8 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
   var MSE = sc.accumulator(pow(convergence,2))
   var NUM = sc.accumulator(1)
   var RMSE_HISTORY = new Array[Double](iterations)
-  
   val examples = data.repartition(numPartition).map(s  => initializer.initd(s))
-  var models = examples
+  
   
   //Initialize Batch Model
   val numExample = data.count().toInt
@@ -102,6 +101,7 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
       difference
     }  
     
+    val examples = data.repartition(numPartition).map(s  => initializer.initd(s))
     var models = examples.mapPartitions(updateBatchModel)
     
     //var predicts = models.map(m => m(0))
@@ -116,7 +116,7 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
     
     iteration+=1
     
-    println("This is iteration ",iteration,"rmse is",rmse,"losses example is",models.count())
+    println("This is iteration ",iteration,"rmse is",rmse,"model example is",models.count())
     
   }
   
