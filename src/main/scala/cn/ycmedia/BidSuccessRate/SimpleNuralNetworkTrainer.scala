@@ -37,14 +37,14 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
   
   var Weight = sc.accumulator(weight)(MultiUnitsAccumulatorParam)
   var MSE = sc.accumulator(0.0)
-  var NUM = sc.accumulator(0)
+  var NUM = sc.accumulator(1)
   
   //Initialize Batch Model
   val numExample = data.count().toInt
   val numPartition = numExample/batchSize
   
   println("These are basic initial parameters: rmse ",rmse,"dataExample ",dataExample,"example ",example,"weight ",weight)
-  println("These are some basic statistics: numExample ",numExample,"numPartition ",numPartition)
+  println("These are some basic statistics: numExample ",numExample,"numPartition ",numPartition,"MSE ",MSE,"NUM ",NUM)
   
   //Algorithm Body
   while(rmse > convergence && iteration < iterations){
