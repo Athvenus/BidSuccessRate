@@ -20,8 +20,6 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
   var weight = initializer.initw
   var iteration = 0
   
-  println("These are basic initial parameters: rmse ",rmse,"dataExample ",dataExample,"example ",example,"weight ",weight)
-  
   object MultiUnitsAccumulatorParam extends AccumulatorParam[Array[Array[Double]]]{
     def zero(initialValue:Array[Array[Double]]):Array[Array[Double]] = {
       weight 
@@ -44,6 +42,9 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
   //Initialize Batch Model
   val numExample = data.count().toInt
   val numPartition = numExample/batchSize
+  
+  println("These are basic initial parameters: rmse ",rmse,"dataExample ",dataExample,"example ",example,"weight ",weight)
+  println("These are some basic statistics: numExample ",numExample,"numPartition ",numPartition)
   
   //Algorithm Body
   while(rmse > convergence && iteration > iterations){
@@ -71,6 +72,7 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
       Weight.add(minus(w,Weight.value))
       MSE.add(L)
       NUM.add(len)
+      println("In this partition,loss sum",L,"iterator length is",len)
       M
       //Do Something To Update The Overall Model,Maybe RMSE
     }
