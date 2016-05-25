@@ -9,10 +9,11 @@ object BidSuccessRateTest {
      val sc=new SparkContext()
      val documentPath = "/opt/dmp/mspace/bsr/160517"
      val modelPath = ""
-     val data = sc.textFile(documentPath)
+     val data = sc.textFile(documentPath).randomSplit(Array(0.7, 0.3), seed = 11L)
+     val testing = data(1)
      val model = Array(Array(0.0))
      //val model = sc.textFile(modelPath).collect()(0)
-     val test = new SimpleNuralNetworkTester(data,model)
+     val test = new SimpleNuralNetworkTester(testing,model)
    }
   
   

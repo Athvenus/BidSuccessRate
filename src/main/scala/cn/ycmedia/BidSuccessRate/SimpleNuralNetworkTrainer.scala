@@ -9,6 +9,8 @@ import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
 import org.apache.spark.AccumulatorParam
 
+import org.apache.spark.mllib.evaluation.BinaryClassificationMetrics
+
 
 
 class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int,hiddenum:Int,binarylen:Int,initialWeight:Double,rate:Double,batchSize:Int,convergence:Double) extends Serializable {
@@ -16,10 +18,13 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
   //Initialize Overall Model
   var rmse = 1.0
   var dataExample = data.take(1)(0)
+  var iteration = 0
+  
   val initializer = new Initializer(dataExample,hiddenum,binarylen,initialWeight)
   var example = initializer.initd(dataExample)
   var weight = initializer.initw
-  var iteration = 0
+  val snn = new SimpleNuralNetwork(hiddenum,binarylen,rate)
+ 
   
   object MultiUnitsAccumulatorParam extends AccumulatorParam[Array[Array[Double]]]{
     def zero(initialValue:Array[Array[Double]]):Array[Array[Double]] = {
@@ -39,6 +44,10 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
   var Weight = sc.accumulator(weight)(MultiUnitsAccumulatorParam)
   var MSE = sc.accumulator(pow(convergence,2))
   var NUM = sc.accumulator(1)
+  var RMSE_HISTORY = Array[Double](iterations)
+  
+  val examples = data.repartition(numPartition).map(s  => initializer.initd(s))
+  var models = examples
   
   //Initialize Batch Model
   val numExample = data.count().toInt
@@ -47,10 +56,9 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
   println("These are basic initial parameters: rmse ",rmse,"dataExample ",dataExample,"example ",example,"weight ",weight)
   println("These are some basic statistics: numExample ",numExample,"numPartition ",numPartition,"MSE ",MSE,"NUM ",NUM)
   
+  
   //Algorithm Body
   while(rmse >= convergence && iteration < iterations){
-    
-    val snn = new SimpleNuralNetwork(hiddenum,binarylen,rate)
     
     var w0 = Weight.value 
     
@@ -94,28 +102,36 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
       difference
     }  
     
-    val examples = data.repartition(numPartition).map(s  => initializer.initd(s))
-    
     var models = examples.mapPartitions(updateBatchModel)
     
-    var predicts = models.map(m => m(0))
+    //var predicts = models.map(m => m(0))
     
-    val simi_examples = models.map(m => m(1))
+    //val simi_examples = models.map(m => m(1))
     
-    val losses = models.map(m => minus(m(1),m(0)))
+    //val losses = models.map(m => minus(m(1),m(0)))
         
     rmse = sqrt(MSE.value/NUM.value)
     
+    RMSE_HISTORY.update(iteration,rmse)
+    
     iteration+=1
     
-    println("This is iteration ",iteration,"rmse is",rmse,"losses example is",losses.count())
+    println("This is iteration ",iteration,"rmse is",rmse,"losses example is",models.count())
     
-   
   }
   
   
  //OutputArrangement 
   val model = Weight.value
+  val simi_examples = examples.map(eg => new snn.predictor(model,eg).update)
+  val scoreAndLabels = examples.map(eg => (new snn.predictor(model,eg).predict,eg(0)(0)))
+  val auc = new BinaryClassificationMetrics(scoreAndLabels).areaUnderROC()
+  
+  println("Some Simi_examples Is",simi_examples.take(1))
+  println("Some Predict Examples Is",scoreAndLabels.take(10))
+  println("Training Auc Is",auc)
+  println("RMSE_HISTORY is",RMSE_HISTORY)
+  
   
   
   //This part output some evaluation metrics

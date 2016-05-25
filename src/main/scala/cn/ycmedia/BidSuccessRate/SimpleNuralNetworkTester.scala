@@ -20,9 +20,9 @@ class SimpleNuralNetworkTester (data:RDD[String],model:Array[Array[Double]]) {
   
    val examples = data.map(s => initializer.initd(s))
    
-   val scoreAndLebels = examples.map(eg => (new snn.predictor(model,eg).predict,eg(0)(0)))
+   val scoreAndLabels = examples.map(eg => (new snn.predictor(model,eg).predict,eg(0)(0)))
   
-   val auc = new BinaryClassificationMetrics(scoreAndLebels).areaUnderROC()
+   val auc = new BinaryClassificationMetrics(scoreAndLabels).areaUnderROC()
    
    println("Test Auc is ",auc)
   
