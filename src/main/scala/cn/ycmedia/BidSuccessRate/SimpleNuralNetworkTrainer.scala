@@ -48,7 +48,7 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
   println("These are some basic statistics: numExample ",numExample,"numPartition ",numPartition,"MSE ",MSE,"NUM ",NUM)
   
   //Algorithm Body
-  while(rmse >= convergence && iteration <= iterations){
+  while(rmse >= convergence && iteration < iterations){
     
     val snn = new SimpleNuralNetwork(hiddenum,binarylen,rate)
     
@@ -102,16 +102,13 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
     
     iteration+=1
     
-    println("This is iteration ",iteration,"rmse is",rmse)
+    println("This is iteration ",iteration,"rmse is",rmse,"losses example is",losses.count())
    
   }
   
   
  //OutputArrangement 
   val model = Weight.value
-  
-  println("Model Training Finished.")
-  
   
   
   //This part output some evaluation metrics
