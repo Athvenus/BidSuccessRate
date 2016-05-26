@@ -110,19 +110,22 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
     
     //val losses = models.map(m => minus(m(1),m(0)))
         
-    //Update model errors
+    //Update Model Errors
     rmse = sqrt(MSE.value/NUM.value)
     
     RMSE_HISTORY.update(iteration,rmse)
     
-    //Update Iteration numbers
+    println("This is iteration ",iteration,"MSE is",MSE.value,"NUM is",NUM.value,"rmse is",rmse,"model example is",models.count())
+    
+    
+    //Update Iteration Numbers
     MSE.add(-MSE.value+pow(convergence,2))
     
     NUM.add(-NUM.value+1)
     
     iteration+=1
     
-    println("This is iteration ",iteration,"rmse is",rmse,"model example is",models.count())
+    
     
   }
   
@@ -133,8 +136,8 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
   val scoreAndLabels = examples.map(eg => (new snn.predictor(model,eg).predict,eg(0)(0)))
   val auc = new BinaryClassificationMetrics(scoreAndLabels).areaUnderROC()
   
-  println("Some Simi_examples Is",simi_examples.take(1))
-  println("Some Predict Examples Is",scoreAndLabels.take(10))
+  //println("Some Simi_examples Is",simi_examples.take(1))
+  //println("Some Predict Examples Is",scoreAndLabels.take(10))
   val pres = scoreAndLabels.take(10)
   for(i <- Iterator.range(0,10)){
     println(i,pres(i))
