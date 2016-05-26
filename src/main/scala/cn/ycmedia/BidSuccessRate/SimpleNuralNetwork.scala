@@ -1,7 +1,6 @@
 package cn.ycmedia.BidSuccessRate
 
 import scala.collection.Iterator
-import scala.collection.Iterator
 
 
 

@@ -45,12 +45,13 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
   var MSE = sc.accumulator(pow(convergence,2))
   var NUM = sc.accumulator(1)
   var RMSE_HISTORY = new Array[Double](iterations)
-  val examples = data.repartition(numPartition).map(s  => initializer.initd(s))
+  
   
   
   //Initialize Batch Model
   val numExample = data.count().toInt
   val numPartition = numExample/batchSize
+  val examples = data.repartition(numPartition).map(s  => initializer.initd(s))
   
   println("These are basic initial parameters: rmse ",rmse,"dataExample ",dataExample,"example ",example,"weight ",weight)
   println("These are some basic statistics: numExample ",numExample,"numPartition ",numPartition,"MSE ",MSE,"NUM ",NUM)
@@ -63,13 +64,23 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
     
     println("In this iteration,start weight is ",w0)
     
+    def minus(A:Array[Array[Double]],B:Array[Array[Double]]):Array[Array[Double]] = {
+      val difference = new Array[Array[Double]](A.length)
+      for(i <- Iterator.range(0,A.length)){
+        difference.update(i,new Array[Double](A(i).length))
+        for(j <- Iterator.range(0,A(i).length)){
+          difference(i).update(j,A(i)(j)-B(i)(j))
+        }
+      }
+      difference
+    }
+    
     def updateBatchModel(iter:Iterator[Array[Array[Double]]]):Iterator[Seq[Array[Array[Double]]]] = {
       //Update weight,predict and hidden example values
       var w = w0
       var d = example
       var p = new snn.predictor(w,d)
       var M = Iterator(Seq(w,d)) 
-      val len = iter.length
       var L = 0.0
       var i = 0
       M.next
@@ -77,29 +88,18 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
         val eg = iter.next
         println("iter unit is",i,eg)
         w = snn.update(w,eg)
-        p = new snn.predictor(w,eg)
-        d = p.update
+        d = new snn.predictor(w,eg).update
         M ++= Iterator(Seq(w,d))
         L += pow(p.predict - eg(0)(0),2)
         i += 1
       }
+      //Update The Overall Model,Maybe RMSE
       Weight.add(minus(w,w0))
       MSE.add(L)
-      NUM.add(len)
-      println("In this partition,loss sum",L,"iterator length is",len)
+      NUM.add(i)
+      println("In this partition,loss sum",L,"iterator length is",i)
       M
-      //Do Something To Update The Overall Model,Maybe RMSE
     }
-    
-    def minus(A:Array[Array[Double]],B:Array[Array[Double]]):Array[Array[Double]] = {
-      val difference = A.toBuffer.toArray
-      for(i <- Iterator.range(0,A.length)){
-        for(j <- Iterator.range(0,A(0).length)){
-          difference(i).update(j,A(i)(j)-B(i)(j))
-        }
-      }
-      difference
-    }  
     
     val examples = data.repartition(numPartition).map(s  => initializer.initd(s))
     var models = examples.mapPartitions(updateBatchModel)
