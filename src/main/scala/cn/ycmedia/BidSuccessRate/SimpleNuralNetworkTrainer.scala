@@ -12,20 +12,18 @@ import org.apache.spark.AccumulatorParam
 import org.apache.spark.mllib.evaluation.BinaryClassificationMetrics
 
 
-
-class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int,hiddenum:Int,binarylen:Int,initialWeight:Double,rate:Double,batchSize:Int,convergence:Double) extends Serializable {
+class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int,binarynum:Int,binarylen:Int,initialWeight:Double,rate:Double,batchSize:Int,convergence:Double) extends Serializable {
   
   //Initialize Overall Model
   var rmse = 1.0
   var dataExample = data.take(1)(0)
   var iteration = 0
   
-  val initializer = new Initializer(dataExample,hiddenum,binarylen,initialWeight)
+  val initializer = new Initializer(dataExample,binarynum,binarylen,initialWeight)
   var example = initializer.initd(dataExample)
   var weight = initializer.initw
-  val snn = new SimpleNuralNetwork(hiddenum,binarylen,rate)
+  val snn = new SimpleNuralNetwork(binarynum,binarylen,rate)
  
-  
   object MultiUnitsAccumulatorParam extends AccumulatorParam[Array[Array[Double]]]{
     def zero(initialValue:Array[Array[Double]]):Array[Array[Double]] = {
       weight 
@@ -46,8 +44,6 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
   var NUM = sc.accumulator(1)
   var RMSE_HISTORY = new Array[Double](iterations)
   
-  
-  
   //Initialize Batch Model
   val numExample = data.count().toInt
   val numPartition = numExample/batchSize
@@ -55,7 +51,6 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
   
   println("These are basic initial parameters: rmse ",rmse,"dataExample ",dataExample,"example ",example,"weight ",weight)
   println("These are some basic statistics: numExample ",numExample,"numPartition ",numPartition,"MSE ",MSE,"NUM ",NUM)
-  
   
   //Algorithm Body
   while(rmse >= convergence && iteration < iterations){
@@ -75,47 +70,41 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
       difference
     }
     
-    def updateBatchModel(iter:Iterator[Array[Array[Double]]]):Iterator[Seq[Array[Array[Double]]]] = {
-      //Update weight,predict and hidden example values
-      var w = w0
+    def updateBatchModel(iter:Iterator[Array[Array[Double]]]):Iterator[(Int,Double,Array[Array[Double]])] = {
+      var Result = List[(Int,Double,Array[Array[Double]])]()
       var d = example
-      var p = new snn.predictor(w,d)
-      var M = Iterator(Seq(w,d)) 
+      var w = w0
       var L = 0.0
       var i = 0
-      M.next
       while(iter.hasNext){
         val eg = iter.next
         println("iter unit is",i,eg)
         w = snn.update(w,eg)
         d = new snn.predictor(w,eg).update
-        M ++= Iterator(Seq(w,d))
-        L += pow(p.predict - eg(0)(0),2)
+        //weight and data
+        L += pow(new snn.predictor(w,eg).predict - eg(0)(0),2)
         i += 1
       }
-      //Update The Overall Model,Maybe RMSE
-      Weight.add(minus(w,w0))
-      MSE.add(L)
-      NUM.add(i)
-      println("In this partition,loss sum",L,"iterator length is",i)
-      M
+      println("In this partition,Length is ",i,"MSE is",MSE)
+      Result.::(i,L,minus(w,w0)).iterator
     }
     
     val examples = data.repartition(numPartition).map(s  => initializer.initd(s))
-    var models = examples.mapPartitions(updateBatchModel)
+    var updates = examples.mapPartitions(updateBatchModel).collect
     
-    //var predicts = models.map(m => m(0))
-    
-    //val simi_examples = models.map(m => m(1))
-    
-    //val losses = models.map(m => minus(m(1),m(0)))
         
     //Update Model Errors
+    for(i <- Iterator.range(0,updates.length)){
+      NUM += updates(i).productElement(0).asInstanceOf[Int]
+      MSE += updates(i).productElement(1).asInstanceOf[Double]
+      Weight += updates(i).productElement(2).asInstanceOf[Array[Array[Double]]]
+    }
+    
     rmse = sqrt(MSE.value/NUM.value)
     
     RMSE_HISTORY.update(iteration,rmse)
     
-    println("This is iteration ",iteration,"MSE is",MSE.value,"NUM is",NUM.value,"rmse is",rmse,"model example is",models.count())
+    println("This is iteration ",iteration,"MSE is",MSE.value,"NUM is",NUM.value,"rmse is",rmse)
     
     
     //Update Iteration Numbers
@@ -181,5 +170,59 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
   //How to update the convergence condition
   //Just update the data bricks
   //error need to collect from every partition
-  
+  //write style like flow
+  /***
+   * var updates = examples.mapPartitions{ egs => {
+      
+      var Result = List[(Int,Double,Array[Array[Double]])]()
+      
+      var d = example
+      var w = w0
+      var L = 0.0
+      var i = 0
+      
+      while(egs.hasNext){
+        val eg = egs.next
+        println("iter unit is",i,eg)
+        w = snn.update(w,eg)
+        d = new snn.predictor(w,eg).update
+        //weight and data
+        L += pow(new snn.predictor(w,eg).predict - eg(0)(0),2)
+        i += 1
+      }
+      
+      Result.::(i,L,minus(w,w0)).iterator
+      
+      }
+    }
+   */
+  //one kind of wrong
+  /***
+   * def updateBatchModel(iter:Iterator[Array[Array[Double]]]):Iterator[Seq[Array[Array[Double]]]] = {
+      //Update weight,predict and hidden example values
+      var w = w0
+      var d = example
+      var M = Iterator(Seq(w,d)) 
+      var L = 0.0
+      var i = 0
+      M.next
+      while(iter.hasNext){
+        val eg = iter.next
+        println("iter unit is",i,eg)
+        w = snn.update(w,eg)
+        d = new snn.predictor(w,eg).update
+        //weight and data
+        M ++= Iterator(Seq(w,d))
+        L += pow(new snn.predictor(w,eg).predict - eg(0)(0),2)
+        i += 1
+      }
+      //Update The Overall Model,Maybe RMSE
+      println(minus(w,w0))
+      Weight.add(minus(w,w0))
+      MSE += L
+      NUM.add(i)
+      println("In this partition,loss sum",L,"iterator length is",i)
+      M
+    }
+   */
 }
