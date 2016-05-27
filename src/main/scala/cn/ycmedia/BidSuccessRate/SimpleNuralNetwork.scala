@@ -7,7 +7,7 @@ import scala.collection.Iterator
 class SimpleNuralNetwork (hiddenum:Int,binarylen:Int,rate:Double) extends Serializable{
   
     
-  class predictor(weight:Array[Array[Double]],example:Array[Array[Double]]) {
+  class predictor(weight:Array[Array[Double]],example:Array[Array[Double]]) extends Serializable{
     //Output Layer Predictor
     var predictedvalue = 0.0
     val simi_example = example.toBuffer.toArray
