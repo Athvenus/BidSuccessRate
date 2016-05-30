@@ -87,7 +87,7 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
       }
       println("In this partition,Length is ",i,"MSE is",MSE)
       Result.::((i,L,minus(w,w0))).iterator
-      //minus(w0,w) Gradient Descend
+      //minus:change of gradient
     }
     
     val examples = data.repartition(numPartition).map(s  => initializer.initd(s))

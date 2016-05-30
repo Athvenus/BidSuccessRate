@@ -33,7 +33,7 @@ class SimpleNuralNetwork (binarynum:Int,binarylen:Int,rate:Double) extends Seria
   
   def outputloss(weight:Array[Array[Double]],example:Array[Array[Double]]):Double = {
     val predictedvalue = new predictor(weight,example).predict
-    val outputloss = predictedvalue*(1-predictedvalue)*(predictedvalue-example(0)(0))
+    val outputloss = predictedvalue*(1-predictedvalue)*(example(0)(0)-predictedvalue)
     outputloss
   }
  
