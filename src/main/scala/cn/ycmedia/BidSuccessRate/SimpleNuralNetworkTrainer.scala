@@ -28,9 +28,10 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
       weight 
     }
     def addInPlace(A:Array[Array[Double]],B:Array[Array[Double]]):Array[Array[Double]] = {
-      val sum = A.toBuffer.toArray
+      val sum = new Array[Array[Double]](A.length)
       for(i <- Iterator.range(0,A.length)){
-        for(j <- Iterator.range(0,A(0).length)){
+        sum.update(i,new Array[Double](A(i).length))
+        for(j <- Iterator.range(0,A(i).length)){
           sum(i).update(j,A(i)(j)+B(i)(j))
         }
       }
@@ -86,6 +87,7 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
       }
       println("In this partition,Length is ",i,"MSE is",MSE)
       Result.::((i,L,minus(w,w0))).iterator
+      //minus(w0,w) Gradient Descend
     }
     
     val examples = data.repartition(numPartition).map(s  => initializer.initd(s))
