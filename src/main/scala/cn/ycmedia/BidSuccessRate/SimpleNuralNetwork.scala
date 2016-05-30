@@ -43,7 +43,7 @@ class SimpleNuralNetwork (binarynum:Int,binarylen:Int,rate:Double) extends Seria
     for{i <- Iterator.range(0,binarynum+1)}{
       val perceivedvalue = new LinearPerceptron (weight(i+1),example(i+1),"sigmoid").perception
       val oloss = outputloss(weight,example)
-      val hloss = perceivedvalue*(1-perceivedvalue)*(weight(binarynum+1)(i)*oloss)
+      val hloss = perceivedvalue*(1-perceivedvalue)*(weight(binarynum+2)(i)*oloss)
       hiddenloss.update(i,hloss)
     }
     hiddenloss

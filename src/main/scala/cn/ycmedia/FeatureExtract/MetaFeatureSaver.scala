@@ -9,7 +9,7 @@ class MetaFeatureSaver (A:DataFrame,B:DataFrame,savePath:String) extends Seriali
   
   //metaPath="/opt/dmp/mspace/"
   
-  val metaFeature = A.join(B,Seq("ex_id"),"left_outer")
+  val metaFeature = A.join(B,Seq("ex_id"),"left_outer").drop("ex_id")
   val len = metaFeature.schema.length
   val meta = metaFeature.map(r => text(r))
   

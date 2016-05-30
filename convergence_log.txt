@@ -32,6 +32,17 @@ after modify accumulator funciton:
 
 
 
-
 after modify label and predicts direction in loss function:
 (This is iteration ,0,MSE is,33911.50921771134,NUM is,134745,rmse is,0.5016689591130229)
+(This is iteration ,1,MSE is,38379.7327438089,NUM is,134745,rmse is,0.5336968551999154)
+(This is iteration ,2,MSE is,43145.46020817697,NUM is,134745,rmse is,0.5658629032930306)
+(This is iteration ,3,MSE is,48102.158228864966,NUM is,134745,rmse is,0.5974835488800877)
+(This is iteration ,4,MSE is,53194.40241348263,NUM is,134745,rmse is,0.6283138569377671)
+(This is iteration ,5,MSE is,58363.475552225,NUM is,134745,rmse is,0.6581338730295958)
+(This is iteration ,6,MSE is,63549.959730525996,NUM is,134745,rmse is,0.6867541784172377)
+(This is iteration ,7,MSE is,68696.2290683006,NUM is,134745,rmse is,0.7140195773708904)
+(This is iteration ,8,MSE is,73748.64833964416,NUM is,134745,rmse is,0.7398108615541261)
+
+
+
+after modify hiddenloss weight location
