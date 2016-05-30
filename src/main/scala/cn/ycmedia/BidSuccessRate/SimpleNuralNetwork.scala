@@ -52,7 +52,10 @@ class SimpleNuralNetwork (binarynum:Int,binarylen:Int,rate:Double) extends Seria
   
   
   def update(weight:Array[Array[Double]],example:Array[Array[Double]]): Array[Array[Double]] = {
-    val updated = weight.toBuffer.toArray
+    val updated = new Array[Array[Double]](example.length)
+    for(i <- Iterator.range(0,example.length)){
+      updated.update(i,new Array[Double](example(i).length))
+    }
     for{i <- Iterator.range(1,binarynum+1)}{
       for{j <- Iterator.range(0,weight(i).length)}{
         var w_ij=weight(i)(j);

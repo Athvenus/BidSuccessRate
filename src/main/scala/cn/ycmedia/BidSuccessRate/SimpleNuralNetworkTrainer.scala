@@ -1,6 +1,5 @@
 package cn.ycmedia.BidSuccessRate
 
-
 import cn.ycmedia.BidSuccessRate._
 import scala.collection.Iterator
 import scala.math.pow
@@ -86,13 +85,12 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
         i += 1
       }
       println("In this partition,Length is ",i,"MSE is",MSE)
-      Result.::(i,L,minus(w,w0)).iterator
+      Result.::((i,L,minus(w,w0))).iterator
     }
     
     val examples = data.repartition(numPartition).map(s  => initializer.initd(s))
     var updates = examples.mapPartitions(updateBatchModel).collect
-    
-        
+          
     //Update Model Errors
     for(i <- Iterator.range(0,updates.length)){
       NUM += updates(i).productElement(0).asInstanceOf[Int]
@@ -106,16 +104,13 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
     
     println("This is iteration ",iteration,"MSE is",MSE.value,"NUM is",NUM.value,"rmse is",rmse)
     
-    
     //Update Iteration Numbers
     MSE.add(-MSE.value+pow(convergence,2))
     
     NUM.add(-NUM.value+1)
     
     iteration+=1
-    
-    
-    
+  
   }
   
   
