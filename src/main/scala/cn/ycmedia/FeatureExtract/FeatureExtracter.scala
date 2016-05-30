@@ -15,9 +15,9 @@ object FeatureExtracter {
     val sc = new SparkContext(conf)
     val sqlContext = new SQLContext(sc)
     
-    val sucessPath = "/user/hive/warehouse/bdl_dmp/plat=baidu/ds=2016-05-22/rt=1"
-    val bidPath = "/user/hive/warehouse/bdl_dmp/plat=baidu/ds=2016-05-22/rt=14"
-    val metaPath = "/opt/dmp/mspace/bsr/160522"
+    val sucessPath = "/user/hive/warehouse/bdl_dmp/plat=baidu/ds=2016-05-29/rt=1"
+    val bidPath = "/user/hive/warehouse/bdl_dmp/plat=baidu/ds=2016-05-29/rt=14"
+    val metaPath = "/opt/dmp/mspace/bsr/160529"
   
     //Load Basic DataFrame
     val successDF = selectsuccess(new DataFrameLoader(sc,3,2,sucessPath).reschema)

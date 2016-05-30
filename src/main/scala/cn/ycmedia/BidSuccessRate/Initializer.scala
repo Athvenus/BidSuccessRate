@@ -7,7 +7,7 @@ import scala.collection.Iterator
 import scala.math.abs
 
 
-class Initializer(data:String,hiddenum:Int,binarylen:Int,initialweight:Double) extends Serializable{
+class Initializer(data:String,bianrynum:Int,binarylen:Int,initialweight:Double) extends Serializable{
   
   val blocks = data.split("\\|")
   val numericblock = blocks(3).split("\t").map(x => toDouble(x))
@@ -25,13 +25,13 @@ class Initializer(data:String,hiddenum:Int,binarylen:Int,initialweight:Double) e
       val pos=hash(i.toString+binaryblock(i))
       example(1).update(pos,1.0)
     }
-    for{j <- Iterator.range(1,hiddenum)}{
+    for{j <- Iterator.range(1,bianrynum)}{
       example+=example(1)
     }
     //3.Get Numeric Feature
     example+=numericblock
     //4.Get Hidden Values
-    example+=new Array[Double](hiddenum+1)
+    example+=new Array[Double](bianrynum+1)
     
     example.toArray
   }
@@ -57,7 +57,7 @@ class Initializer(data:String,hiddenum:Int,binarylen:Int,initialweight:Double) e
   def initw:Array[Array[Double]] = {
     //Initialize Model Weight
     val numericlen = numericblock.length
-    val units = new MultiUnits(hiddenum,binarylen,numericlen).Units
+    val units = new MultiUnits(bianrynum,binarylen,numericlen).Units
     val weight = ArrayBuffer(Array(0.0))
     for{i <- Iterator.range(1,units.length)}{
       weight+=units(i).map(_ +initialweight)
