@@ -62,11 +62,11 @@ class SimpleNuralNetwork (binarynum:Int,binarylen:Int,rate:Double) extends Seria
         if(i < weight.length-1){
           //update hidden weight
           val delta_w_ij = hiddenloss(weight,example)(i-1)
-          w_ij+=rate*delta_w_ij*example(i)(j)
+          w_ij-=rate*delta_w_ij*example(i)(j)
         }else{
           //update output weight
           val delta_w_ij = outputloss(weight,example)
-          w_ij+=rate*delta_w_ij*example(i)(j)
+          w_ij-=rate*delta_w_ij*example(i)(j)
         }
         if(delta_w_ij > 0){
           println("delta_w_ij is not zero",delta_w_ij)
