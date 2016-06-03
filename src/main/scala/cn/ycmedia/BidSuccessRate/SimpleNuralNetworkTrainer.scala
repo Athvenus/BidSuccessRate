@@ -40,7 +40,7 @@ class SimpleNuralNetworkTrainer (sc:SparkContext,data:RDD[String],iterations:Int
   }
   
   var Weight = sc.accumulator(weight)(MultiUnitsAccumulatorParam)
-  var MSE = sc.accumulator(pow(convergence,2))
+  var MSE = sc.accumulator(pow(convergence,2)) 
   var NUM = sc.accumulator(1)
   var RMSE_HISTORY = new Array[Double](iterations)
   
